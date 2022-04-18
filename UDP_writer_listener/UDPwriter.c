@@ -14,8 +14,8 @@ int main()
 {
     // char message[2000];
     // char server_message[2000];
-    int server_message;
-    int message;
+    float server_message;
+    float message;
     int message_size = sizeof(message);
     int reply_size = sizeof(server_message);
     unsigned int flags=0;
@@ -45,8 +45,8 @@ int main()
     //Write message
     // printf("Enter a phrase to be sent: ");
     // fgets(message, sizeof(message), stdin);
-    printf("Enter an integer to be sent: ");
-    scanf("%d", &message);
+    printf("Enter a float to be sent: ");
+    scanf("%f", &message);
     
     //Send message
     if (sendto(my_socket, &message, sizeof(message), flags, (struct sockaddr*)&client_address,
@@ -65,7 +65,7 @@ int main()
               }
 
     //What's the response from the server?
-    printf("Server response is: %d", server_message);
+    printf("Server response is: %f", server_message);
 
     //Close socket
     close(my_socket);

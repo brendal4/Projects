@@ -15,8 +15,8 @@ int main()
     //char message[2000];
     //char reply[2000];
 
-    int message;
-    int reply;
+    float message;
+    float reply;
 
     //Create socket:
     printf("Creating socket...\n");
@@ -46,7 +46,7 @@ int main()
         return -1;
                   }
 
-    printf("Client says: %d\n", message);
+    printf("Client says: %f\n", message);
 
     //strcpy(reply, message);
 
