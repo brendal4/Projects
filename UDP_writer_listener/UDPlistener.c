@@ -6,12 +6,17 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define GETSOCKETERRNO() (errno)
 
 int main()
 {
-    char message[2000];
+    //char message[2000];
+    //char reply[2000];
+
+    int message;
+    int reply;
 
     //Create socket:
     printf("Creating socket...\n");
@@ -25,8 +30,8 @@ int main()
     listener_address.sin_port = htons(2000);
     listener_address.sin_addr.s_addr = inet_addr("127.0.0.1");
     int flags=0;
-    int ina_listener_size = sizeof(listener_address);
-    int ina_client_size = sizeof(client_address);
+    int listener_address_size = sizeof(listener_address);
+    int client_address_size = sizeof(client_address);
 
     //Bind to port and IP
     printf("Binding to port and IP...\n");    //ADD BETTER ERROR HANDLING HERE
@@ -35,19 +40,21 @@ int main()
     printf("Listening...\n");  //Maybe add what port/IP it's listening on?
 
     //Revieve any incoming messages
-    if (recvfrom(my_socket, message, sizeof(message), flags, (struct sockaddr*)&client_address, 
-                  &ina_client_size) < 0) {
+    if (recvfrom(my_socket, &message, sizeof(message), flags, (struct sockaddr*)&client_address, 
+                  &client_address_size) < 0) {
         printf("Failed to recieve message\n");
         return -1;
                   }
 
-    printf("Client says: %s", message);
+    printf("Client says: %d\n", message);
 
-    char reply[2000] = "Message recieved";    //Print the message back to the client instead?
+    //strcpy(reply, message);
+
+    reply = message;
 
     //Send reply
-    if (sendto(my_socket, reply, strlen(reply), flags, (struct sockaddr*)&client_address,
-        ina_client_size) < 0) {
+    if (sendto(my_socket, &reply, sizeof(reply), flags, (struct sockaddr*)&client_address,
+                client_address_size) < 0) {
             printf("Failed to send reply\n");
             printf("The last error message is: %s\n", strerror(errno));
             return -1;

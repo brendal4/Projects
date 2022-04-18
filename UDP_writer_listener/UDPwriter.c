@@ -6,12 +6,16 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define GETSOCKETERRNO() (errno)
 
 int main()
 {
-    char message[2000], server_message[2000];
+    // char message[2000];
+    // char server_message[2000];
+    int server_message;
+    int message;
     int message_size = sizeof(message);
     int reply_size = sizeof(server_message);
     unsigned int flags=0;
@@ -39,11 +43,13 @@ int main()
     printf("Status: %s\n", strerror(errno));
 
     //Write message
-    printf("Enter a phrase to be sent: ");
-    fgets(message, sizeof(message), stdin);
+    // printf("Enter a phrase to be sent: ");
+    // fgets(message, sizeof(message), stdin);
+    printf("Enter an integer to be sent: ");
+    scanf("%d", &message);
     
     //Send message
-    if (sendto(my_socket, message, strlen(message), flags, (struct sockaddr*)&client_address,
+    if (sendto(my_socket, &message, sizeof(message), flags, (struct sockaddr*)&client_address,
         sockaddr_size) < 0) {
             printf("Failed to send\n");
             printf("The last error message is: %s\n", strerror(errno));
@@ -51,7 +57,7 @@ int main()
         }
 
     //Receive reply from server
-    if (recvfrom(my_socket, server_message, reply_size, flags, (struct sockaddr*)&client_address, 
+    if (recvfrom(my_socket, &server_message, reply_size, flags, (struct sockaddr*)&client_address, 
         &sockaddr_size) < 0) {
             printf("Error when receiving reply\n");
             printf("The last error message is: %s\n", strerror(errno));
@@ -59,7 +65,7 @@ int main()
               }
 
     //What's the response from the server?
-    printf("Server response is: %s", server_message);
+    printf("Server response is: %d", server_message);
 
     //Close socket
     close(my_socket);
