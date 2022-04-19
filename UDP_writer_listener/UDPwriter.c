@@ -12,7 +12,7 @@
 
 int main()
 {
-    // char message[2000];
+    // char message[2000];         //Use these two lines for sending/recieving strings
     // char server_message[2000];
     float server_message;
     float message;
@@ -30,8 +30,7 @@ int main()
     struct sockaddr_in client_address;   //ina = internet address
     client_address.sin_family = AF_INET;  //Use IPv4
     client_address.sin_port = htons(2000);  //Port number (it's gotta be in network order, hence htons()!)
-    client_address.sin_addr.s_addr = inet_addr("127.0.0.1");  //Sets address...apparently this is an old way?
-    // client_address.sin_addr.s_addr = inet_pton(AF_INET, "127.0.0.1", &(ina.sin_addr));
+    client_address.sin_addr.s_addr = inet_addr("127.0.0.1");  //Sets address
     if (client_address.sin_addr.s_addr < 0) {
         printf("Error setting address!");
     }

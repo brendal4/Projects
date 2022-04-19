@@ -35,7 +35,7 @@ int main()
 
     //Bind to port and IP
     printf("Binding to port and IP...\n");    //ADD BETTER ERROR HANDLING HERE
-    bind(my_socket, (struct sockaddr*)&listener_address, sizeof(listener_address));
+    bind(my_socket, (struct sockaddr *) &listener_address, listener_address_size);
     printf("Status: %s\n", strerror(errno));
     printf("Listening...\n");  //Maybe add what port/IP it's listening on?
 
