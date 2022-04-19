@@ -43,7 +43,7 @@ int main()
     printf("Status: %s\n", strerror(errno));
 
     //Write message
-    // printf("Enter a phrase to be sent: ");
+    // printf("Enter a phrase to be sent: ");    //Use these two lines for sending strings
     // fgets(message, sizeof(message), stdin);
     printf("Enter a float to be sent: ");
     scanf("%f", &message);
@@ -51,18 +51,24 @@ int main()
     //Send message
     if (sendto(my_socket, &message, sizeof(message), flags, (struct sockaddr*)&client_address,
         sockaddr_size) < 0) {
-            printf("Failed to send\n");
-            printf("The last error message is: %s\n", strerror(errno));
-            return -1;
-        }
+        printf("Failed to send\n");
+        printf("The last error message is: %s\n", strerror(errno));
+        return -1;
+    }
 
     //Receive reply from server
-    if (recvfrom(my_socket, &server_message, reply_size, flags, (struct sockaddr*)&client_address, 
-        &sockaddr_size) < 0) {
-            printf("Error when receiving reply\n");
-            printf("The last error message is: %s\n", strerror(errno));
-            return -1;
-              }
+    int recieving_func = recvfrom(my_socket, &server_message, reply_size, flags, 
+                            (struct sockaddr*)&client_address, &sockaddr_size);
+
+    if (recieving_func < 0) {
+        printf("Error when receiving reply\n");
+        printf("The last error message is: %s\n", strerror(errno));
+        return -1;
+    }
+    else if (recieving_func == 0) {
+        printf("Connection closed on the other side!");
+        return -1;
+    }
 
     //What's the response from the server?
     printf("Server response is: %f", server_message);

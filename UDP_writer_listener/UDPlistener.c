@@ -12,7 +12,7 @@
 
 int main()
 {
-    //char message[2000];
+    //char message[2000];   //Use these 2 lines for sending strings
     //char reply[2000];
 
     float message;
@@ -40,24 +40,29 @@ int main()
     printf("Listening...\n");  //Maybe add what port/IP it's listening on?
 
     //Revieve any incoming messages
-    if (recvfrom(my_socket, &message, sizeof(message), flags, (struct sockaddr*)&client_address, 
-                  &client_address_size) < 0) {
+    // If sending/recieving strings, use strlen(message) instead of sizeof(message)
+    int recieving_func = recvfrom(my_socket, &message, sizeof(message), flags, 
+                          (struct sockaddr*)&client_address, &client_address_size);
+
+    if (recieving_func < 0) {
         printf("Failed to recieve message\n");
         return -1;
-                  }
-
+    }
+    else if (recieving_func == 0) {
+        printf("Connection closed on the other side!");
+    }
+    
     printf("Client says: %f\n", message);
 
-    //strcpy(reply, message);
-
+    //strcpy(reply, message);   //Use this line for strings
     reply = message;
 
     //Send reply
     if (sendto(my_socket, &reply, sizeof(reply), flags, (struct sockaddr*)&client_address,
                 client_address_size) < 0) {
-            printf("Failed to send reply\n");
-            printf("The last error message is: %s\n", strerror(errno));
-            return -1;
+        printf("Failed to send reply\n");
+        printf("The last error message is: %s\n", strerror(errno));
+        return -1;
         }
 
     //Close socket
